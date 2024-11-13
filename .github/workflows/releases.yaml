@@ -1,0 +1,33 @@
+name: Upload artifact on release
+on:
+  push:
+    tags:
+      - 'releases/*'
+permissions:
+  contents: write
+jobs:
+  build:
+    name: Publish binaries
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout 🛎️
+      uses: actions/checkout@v3
+    - name: Export env file 🛠️
+      uses: cardinalby/export-env-action@v2
+      with:
+        envFile: ".env"
+        expand: "true"
+    - name: Set env 🛠️
+      run: |
+        echo "PACKAGE_VERSION=${GITHUB_REF#refs/*/releases/}" >> $GITHUB_ENV
+    - name: Build 📦️
+      run: ./generate.sh
+    - name: Upload binaries to release 🚀
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: wheels/text2motion_client_api-${{ env.PACKAGE_VERSION }}-py3-none-any.whl
+        asset_name: text2motion_client_api-${{ env.PACKAGE_VERSION }}-py3-none-any.whl
+        tag: ${{ github.ref }}
+        overwrite: true
+        body: "Text2Motion Client API Python3 - All platforms"
