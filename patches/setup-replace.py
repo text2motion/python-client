@@ -1,0 +1,16 @@
+setup(
+    name=NAME,
+    version=VERSION,
+    description="OpenAPI generated Python client for Text2Motion API",
+    author="Text2Motion",
+    author_email="support@text2motion.ai",
+    url="https://github.com/text2motion/python-client",
+    keywords=["OpenAPI", "OpenAPI-Generator", "Text2Motion API"],
+    install_requires=REQUIRES,
+    packages=find_packages(exclude=["test", "tests"]),
+    include_package_data=True,
+    long_description_content_type='text/markdown',
+    long_description=open('README.md').read(),
+    license="MIT",
+    package_data={"text2motion_client_api": ["py.typed"]},
+)
