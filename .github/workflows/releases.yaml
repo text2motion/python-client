@@ -1,10 +1,12 @@
-name: Upload artifact on release
+name: Publish to PyPI on Release
 on:
   push:
     tags:
       - 'releases/*'
+
 permissions:
   contents: write
+  id-token: write
 jobs:
   build:
     name: Publish binaries
@@ -22,12 +24,7 @@ jobs:
         echo "PACKAGE_VERSION=${GITHUB_REF#refs/*/releases/}" >> $GITHUB_ENV
     - name: Build 📦️
       run: ./generate.sh
-    - name: Upload binaries to release 🚀
-      uses: svenstaro/upload-release-action@v2
+    - name: Publish package distributions to PyPI 🚀
+      uses: pypa/gh-action-pypi-publish@release/v1
       with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: wheels/text2motion_client_api-${{ env.PACKAGE_VERSION }}-py3-none-any.whl
-        asset_name: text2motion_client_api-${{ env.PACKAGE_VERSION }}-py3-none-any.whl
-        tag: ${{ github.ref }}
-        overwrite: true
-        body: "Text2Motion Client API Python3 - All platforms"
+        packages-dir: python-client/dist
